@@ -9,6 +9,15 @@ var usersRouter = require("./routes/users");
 
 var app = express();
 
+// config import
+import configSet from "./config/config";
+global.config = configSet("development");
+
+// mongoDB
+import connectToDb from "./db/connect";
+
+connectToDb();
+
 // view engine setup
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
@@ -20,10 +29,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// config import
-import configSet from "./config/config";
-global.config = configSet("development");
-
 // middleware
 // app.use("/", require("./middlewares/testMiddleware"));
 app.use("/", require("./middlewares/graphqlMiddleware"));
@@ -34,19 +39,19 @@ app.use("/users", usersRouter);
 
 // graphql
 // express
-import { ApolloServer, gql } from "apollo-server-express";
-const typeDefs = gql`
-    type Query {
-        hello: String
-    }
-`;
-const resolvers = {
-    Query: {
-        hello: () => "Hello GraphQL"
-    }
-};
-const server = new ApolloServer({ typeDefs, resolvers });
-server.applyMiddleware({ app });
+// import { ApolloServer, gql } from "apollo-server-express";
+// const typeDefs = gql`
+//     type Query {
+//         hello: String
+//     }
+// `;
+// const resolvers = {
+//     Query: {
+//         hello: () => "Hello GraphQL"
+//     }
+// };
+// const server = new ApolloServer({ typeDefs, resolvers });
+// server.applyMiddleware({ app });
 // express
 // graphql
 

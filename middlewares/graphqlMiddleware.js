@@ -41,4 +41,29 @@ var router = express.Router();
 // // return { "data": {"hello": "Hello GraphQL"}}
 // step2
 
+// step4
+console.log("step4");
+import graphqlHTTP from "express-graphql";
+import schema from "../schemas/userSchema";
+router.use(
+    "/graphql",
+    graphqlHTTP({
+        schema: schema,
+        graphiql: true
+    })
+);
+/*
+    mutation {
+        createUser(input: {
+            name: "keke3"
+            age: 11
+            gender: "남"
+        }){ // return 받을 값
+           name
+           age
+        }
+    }
+*/
+// step4
+
 module.exports = router;
