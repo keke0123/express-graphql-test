@@ -10,8 +10,9 @@ var usersRouter = require("./routes/users");
 var app = express();
 
 // view engine setup
+app.set("view engine", "ejs");
+app.engine("html", require("ejs").renderFile);
 app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -23,8 +24,25 @@ app.use(express.static(path.join(__dirname, "public")));
 import configSet from "./config/config";
 global.config = configSet("development");
 
+// middleware
+app.use("/", require("./middlewares/testMiddleware"));
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+// app.use("/test", require("./routes/test"));
+
+// graphql
+import { graphql, buildSchema } from "graphql";
+let schema = buildSchema(`
+    type Query {
+        hello: String
+    }
+`);
+let root = { hello: () => "Hello QraphQL" };
+graphql(schema, "{hello}", root).then(res => {
+    console.log(res);
+});
+// graphql
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
