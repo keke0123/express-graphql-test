@@ -25,23 +25,29 @@ import configSet from "./config/config";
 global.config = configSet("development");
 
 // middleware
-app.use("/", require("./middlewares/testMiddleware"));
+// app.use("/", require("./middlewares/testMiddleware"));
+app.use("/", require("./middlewares/graphqlMiddleware"));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 // app.use("/test", require("./routes/test"));
 
 // graphql
-import { graphql, buildSchema } from "graphql";
-let schema = buildSchema(`
+// express
+import { ApolloServer, gql } from "apollo-server-express";
+const typeDefs = gql`
     type Query {
         hello: String
     }
-`);
-let root = { hello: () => "Hello QraphQL" };
-graphql(schema, "{hello}", root).then(res => {
-    console.log(res);
-});
+`;
+const resolvers = {
+    Query: {
+        hello: () => "Hello GraphQL"
+    }
+};
+const server = new ApolloServer({ typeDefs, resolvers });
+server.applyMiddleware({ app });
+// express
 // graphql
 
 // catch 404 and forward to error handler
